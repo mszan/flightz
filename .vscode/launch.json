@@ -1,0 +1,15 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "flightz-hub",
+            "type": "node",
+            "address": "localhost",
+            "port": 9101,
+            "localRoot": "${workspaceFolder}/flightz-hub/source/src",
+            "remoteRoot": "/opt/source/src",
+            "request": "attach",
+            "restart": true
+        }
+    ]
+}

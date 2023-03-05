@@ -1,0 +1,55 @@
+version: "3"
+
+networks:
+    public:
+
+volumes:
+    flightz_db_data:
+        name: "flightz_db_data"
+    flightz_db_log:
+        name: "flightz_db_log"
+
+services:
+
+    flightz-hub:
+        container_name: flightz-hub
+        build:
+            context: flightz-hub
+        networks:
+            - public
+        depends_on:
+            - flightz-db
+        entrypoint: ["/bin/sh", "-c", "npm run watch"]
+        environment:
+            NPM_CONFIG_LOGLEVEL: "${NPM_CONFIG_LOGLEVEL}"
+            NEST_DEBUG: "${NEST_DEBUG}"
+            APP_ENV: "${FLIGHTZ_HUB_APP_ENV}"
+            DB_HOST: "${FLIGHTZ_DB_HOST}"
+            DB_USER: "${FLIGHTZ_DB_USER}"
+            DB_PASS: "${FLIGHTZ_DB_PASS}"
+            DB_NAME: "${FLIGHTZ_DB_NAME}"
+        expose:
+            - 3100
+        ports:
+            - 3100:3000
+            - 3101:3101
+        volumes:
+            - ./flightz-hub/source:/opt/source
+
+    flightz-db:
+        container_name: flightz-db
+        image: postgres:15.2
+        networks:
+            - public
+        command: postgres -c log_statement=all
+        environment:
+            POSTGRES_DB: "${FLIGHTZ_DB_NAME}"
+            POSTGRES_USER: "${FLIGHTZ_DB_USER}"
+            POSTGRES_PASSWORD: "${FLIGHTZ_DB_PASS}"
+        expose:
+            - 5432
+        ports:
+            - 5100:5432
+        volumes:
+            - flightz_db_data:/var/lib/postgresql/data
+            - flightz_db_log:/var/log/postgresql

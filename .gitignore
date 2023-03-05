@@ -1,0 +1,12 @@
+# dev
+.history
+.vscode/settings.json
+
+# misc
+.env
+
+# flightz-hub
+flightz-hub/source/node_modules
+flightz-hub/source/build
+flightz-hub/source/dist
+flightz-hub/source/tmp
